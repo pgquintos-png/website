@@ -2,146 +2,98 @@
 const medicalProducts = [
     {
         id: 1,
-        name: "Digital Blood Pressure Monitor",
+        name: "YSSTG0102 MORGUE FREEZER",
         category: "monitoring",
-        price: 89.99,
-        description: "Accurate automatic blood pressure monitoring with large LCD display and memory function.",
-        rating: 4.8,
-        reviews: 234,
+        description: "a two-body morgue freezer designed for hospitals and funeral homes, constructed from stainless steel for durability and corrosion resistance",
         inStock: true,
-        badge: "Best Seller",
-        image: "images/blood-pressure-monitor.jpg"  // Add your image path here
+        image: "images/YSSTG0102-MORGUE-FREEZER.png"  // Add your image path here
     },
     {
         id: 2,
-        name: "Infrared Thermometer",
+        name: "YSCFJ-3 CORPSE STORAGE RACK",
         category: "diagnostic",
-        price: 45.99,
-        description: "Non-contact forehead thermometer with instant readings and fever alarm system.",
-        rating: 4.6,
-        reviews: 567,
+        description: "a 3-tiered mortuary cadaver storage rack made of 304 stainless steel, designed for secure and space-efficient storage of deceased bodies in medical and funeral facilities",
         inStock: true,
-        badge: null,
-        image: "images/thermometer.jpg"  // Add your image path here
+        image: "images/YSCFJ-3-CORPSE-STORAGE-RACK.png"  // Add your image path here
     },
     {
         id: 3,
-        name: "N95 Respirator Masks (Box of 20)",
+        name: "YSTSC-2D CORPSE TRANSFER TROLLEY WITH COVER",
         category: "protective",
-        price: 34.99,
-        description: "NIOSH-approved N95 masks providing 95% filtration efficiency against airborne particles.",
-        rating: 4.9,
-        reviews: 892,
+        description: "a piece of stainless steel mortuary equipment used for the discreet and hygienic transport of deceased individuals",
         inStock: true,
-        badge: "Popular",
-        image: "images/n95-mask.jpg"
+        image: "images/YSTSC-2D-CORPSE-TRANSFER-TROLLEY-WITH-COVER.png"
     },
     {
         id: 4,
         name: "Pulse Oximeter",
         category: "monitoring",
-        price: 29.99,
         description: "Fingertip pulse oximeter for measuring SpO2 and heart rate with OLED display.",
-        rating: 4.7,
-        reviews: 445,
         inStock: true,
-        badge: null,
         image: "images/pulse-oximeter.jpg"
     },
     {
         id: 5,
         name: "Digital Stethoscope",
         category: "diagnostic",
-        price: 199.99,
         description: "Professional electronic stethoscope with amplification and noise reduction technology.",
-        rating: 4.5,
-        reviews: 156,
         inStock: true,
-        badge: "Pro",
         image: "images/stethoscope.jpg"
     },
     {
         id: 6,
         name: "Surgical Gloves (100 Pack)",
         category: "protective",
-        price: 24.99,
         description: "Latex-free nitrile examination gloves, powder-free and highly durable.",
-        rating: 4.8,
-        reviews: 678,
         inStock: true,
-        badge: null,
         image: "images/surgical-gloves.jpg"
     },
     {
         id: 7,
         name: "Glucose Monitoring System",
         category: "monitoring",
-        price: 119.99,
         description: "Complete blood glucose monitoring kit with meter, test strips, and lancing device.",
-        rating: 4.6,
-        reviews: 321,
         inStock: true,
-        badge: "Complete Kit",
         image: "images/glucose-monitor.jpg"
     },
     {
         id: 8,
         name: "Surgical Scissors Set",
         category: "surgical",
-        price: 79.99,
         description: "Professional-grade stainless steel surgical scissors, autoclavable and corrosion-resistant.",
-        rating: 4.9,
-        reviews: 203,
         inStock: true,
-        badge: null,
         image: "images/surgical-scissors.jpg"
     },
     {
         id: 9,
         name: "Medical Face Shields (Pack of 10)",
         category: "protective",
-        price: 19.99,
         description: "Clear protective face shields with anti-fog coating and adjustable headband.",
-        rating: 4.4,
-        reviews: 412,
         inStock: true,
-        badge: null,
         image: "images/face-shields.jpg"
     },
     {
         id: 10,
         name: "ECG Machine - 12 Lead",
         category: "diagnostic",
-        price: 1299.99,
         description: "Portable 12-lead ECG machine with color touchscreen and wireless connectivity.",
-        rating: 4.7,
-        reviews: 87,
         inStock: true,
-        badge: "Professional",
         image: "images/ecg-machine.jpg"
     },
     {
         id: 11,
         name: "Nebulizer System",
         category: "monitoring",
-        price: 69.99,
         description: "Compact nebulizer for respiratory treatments with quiet operation and multiple masks.",
-        rating: 4.5,
-        reviews: 289,
         inStock: true,
-        badge: null,
         image: "images/nebulizer.jpg"
     },
     {
         id: 12,
         name: "Surgical Suture Kit",
         category: "surgical",
-        price: 149.99,
         description: "Complete suture practice kit with various suture types, needle holders, and forceps.",
-        rating: 4.8,
-        reviews: 167,
         inStock: true,
-        badge: "Training Kit",
         image: "images/suture-kit.jpg"
     }
 ];
@@ -178,9 +130,8 @@ function renderProducts(products) {
     productsGrid.innerHTML = products.map(product => `
         <div class="product-card" data-product-id="${product.id}">
             <div class="product-image">
-                ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
                 ${product.image 
-                    ? `<img src="${product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">` 
+                    ? `<img src="${product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: contain; object-position: center;">` 
                     : `<svg class="product-icon" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                         ${getProductIcon(product.category)}
                     </svg>`
@@ -189,13 +140,15 @@ function renderProducts(products) {
             <div class="product-info">
                 <div class="product-category">${product.category}</div>
                 <h3 class="product-name">${product.name}</h3>
+                ${product.rating && product.reviews ? `
                 <div class="product-rating">
                     ${generateStars(product.rating)}
                     <span class="rating-count">(${product.reviews})</span>
                 </div>
+                ` : ''}
                 <p class="product-description">${product.description}</p>
                 <div class="product-footer">
-                    <div class="product-price">$${product.price.toFixed(2)}</div>
+                    ${product.price ? `<div class="product-price">$${product.price.toFixed(2)}</div>` : ''}
                     <button class="add-to-cart-btn" onclick="addToCart(${product.id})">
                         Add to Cart
                     </button>
@@ -336,15 +289,136 @@ function setupEventListeners() {
     
     // Cart button click
     document.querySelector('.cart-btn').addEventListener('click', () => {
-        if (cart.length === 0) {
-            showNotification('Your cart is empty');
-        } else {
-            showNotification(`You have ${cart.length} item(s) in your cart`);
-        }
+        showCartModal();
     });
 }
 
-// Add CSS animations for notifications
+// Show cart modal
+function showCartModal() {
+    // Create modal if it doesn't exist
+    let modal = document.getElementById('cartModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'cartModal';
+        modal.className = 'cart-modal';
+        document.body.appendChild(modal);
+        
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeCartModal();
+            }
+        });
+    }
+    
+    // Render cart contents
+    renderCartModal();
+    modal.style.display = 'flex';
+}
+
+// Close cart modal
+function closeCartModal() {
+    const modal = document.getElementById('cartModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Render cart modal content
+function renderCartModal() {
+    const modal = document.getElementById('cartModal');
+    if (!modal) return;
+    
+    if (cart.length === 0) {
+        modal.innerHTML = `
+            <div class="cart-modal-content">
+                <div class="cart-modal-header">
+                    <h2>Shopping Cart</h2>
+                    <button class="close-btn" onclick="closeCartModal()">×</button>
+                </div>
+                <div class="cart-empty">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="9" cy="21" r="1"/>
+                        <circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <h3>Your cart is empty</h3>
+                    <p>Add some products to get started</p>
+                    <button class="btn btn-primary" onclick="closeCartModal()">Continue Shopping</button>
+                </div>
+            </div>
+        `;
+    } else {
+        const cartItems = cart.map((product, index) => `
+            <div class="cart-item">
+                <div class="cart-item-image">
+                    ${product.image 
+                        ? `<img src="${product.image}" alt="${product.name}">` 
+                        : `<svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            ${getProductIcon(product.category)}
+                        </svg>`
+                    }
+                </div>
+                <div class="cart-item-details">
+                    <h4>${product.name}</h4>
+                    <p class="cart-item-category">${product.category}</p>
+                    ${product.price ? `<p class="cart-item-price">$${product.price.toFixed(2)}</p>` : ''}
+                </div>
+                <button class="cart-item-remove" onclick="removeFromCart(${index})">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        `).join('');
+        
+        const total = cart.reduce((sum, product) => sum + (product.price || 0), 0);
+        
+        modal.innerHTML = `
+            <div class="cart-modal-content">
+                <div class="cart-modal-header">
+                    <h2>Shopping Cart (${cart.length})</h2>
+                    <button class="close-btn" onclick="closeCartModal()">×</button>
+                </div>
+                <div class="cart-items">
+                    ${cartItems}
+                </div>
+                <div class="cart-modal-footer">
+                    ${total > 0 ? `
+                    <div class="cart-total">
+                        <span>Total:</span>
+                        <span class="cart-total-amount">$${total.toFixed(2)}</span>
+                    </div>
+                    ` : ''}
+                    <button class="btn btn-primary" onclick="checkout()">Proceed to Checkout</button>
+                    <button class="btn btn-secondary" onclick="closeCartModal()">Continue Shopping</button>
+                </div>
+            </div>
+        `;
+    }
+}
+
+// Remove item from cart
+function removeFromCart(index) {
+    const product = cart[index];
+    cart.splice(index, 1);
+    updateCartCount();
+    renderCartModal();
+    showNotification(`${product.name} removed from cart`);
+}
+
+// Checkout function
+function checkout() {
+    if (cart.length === 0) {
+        showNotification('Your cart is empty');
+        return;
+    }
+    showNotification('Checkout functionality coming soon!');
+    closeCartModal();
+}
+
+// Add CSS animations for notifications and cart modal
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideIn {
@@ -367,6 +441,194 @@ style.textContent = `
             transform: translateX(400px);
             opacity: 0;
         }
+    }
+    
+    /* Cart Modal Styles */
+    .cart-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 10000;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+    
+    .cart-modal-content {
+        background: white;
+        border-radius: 12px;
+        max-width: 600px;
+        width: 100%;
+        max-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .cart-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 24px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .cart-modal-header h2 {
+        margin: 0;
+        font-size: 24px;
+        color: #111827;
+    }
+    
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 36px;
+        color: #6b7280;
+        cursor: pointer;
+        line-height: 1;
+        padding: 0;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        transition: all 0.2s;
+    }
+    
+    .close-btn:hover {
+        background: #f3f4f6;
+        color: #111827;
+    }
+    
+    .cart-items {
+        flex: 1;
+        overflow-y: auto;
+        padding: 24px;
+    }
+    
+    .cart-item {
+        display: flex;
+        gap: 16px;
+        padding: 16px;
+        background: #f9fafb;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        position: relative;
+    }
+    
+    .cart-item-image {
+        width: 80px;
+        height: 80px;
+        flex-shrink: 0;
+        background: white;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+    
+    .cart-item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+    
+    .cart-item-image svg {
+        color: #9ca3af;
+    }
+    
+    .cart-item-details {
+        flex: 1;
+    }
+    
+    .cart-item-details h4 {
+        margin: 0 0 8px 0;
+        font-size: 16px;
+        color: #111827;
+    }
+    
+    .cart-item-category {
+        font-size: 14px;
+        color: #6b7280;
+        text-transform: capitalize;
+        margin: 0 0 8px 0;
+    }
+    
+    .cart-item-price {
+        font-size: 18px;
+        font-weight: 600;
+        color: #059669;
+        margin: 0;
+    }
+    
+    .cart-item-remove {
+        background: white;
+        border: 1px solid #e5e7eb;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ef4444;
+        transition: all 0.2s;
+        flex-shrink: 0;
+    }
+    
+    .cart-item-remove:hover {
+        background: #fee2e2;
+        border-color: #ef4444;
+    }
+    
+    .cart-modal-footer {
+        padding: 24px;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .cart-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 20px;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 8px;
+    }
+    
+    .cart-total-amount {
+        color: #059669;
+    }
+    
+    .cart-empty {
+        padding: 60px 24px;
+        text-align: center;
+        color: #6b7280;
+    }
+    
+    .cart-empty svg {
+        margin: 0 auto 24px;
+        color: #d1d5db;
+    }
+    
+    .cart-empty h3 {
+        font-size: 24px;
+        color: #111827;
+        margin: 0 0 8px 0;
+    }
+    
+    .cart-empty p {
+        margin: 0 0 24px 0;
+        font-size: 16px;
     }
 `;
 document.head.appendChild(style);
