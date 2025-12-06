@@ -26,11 +26,11 @@ const medicalProducts = [
     },
     {
         id: 4,
-        name: "Pulse Oximeter",
+        name: "YSJPT10B MULTI-FUNCTIONAL AUTOPSY TABLE",
         category: "monitoring",
-        description: "Fingertip pulse oximeter for measuring SpO2 and heart rate with OLED display.",
+        description: "a high-quality, stainless steel table designed for prosectoriums, featuring a durable, easy-to-clean surface, and integrated systems for water, drainage, and ventilation",
         inStock: true,
-        image: "images/pulse-oximeter.jpg"
+        image: "images/YSJPT10B-MULTI-FUNCTIONAL-AUTOPSY-TABLE.png"
     },
     {
         id: 5,
