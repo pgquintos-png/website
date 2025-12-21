@@ -34,11 +34,11 @@ const medicalProducts = [
     },
     {
         id: 5,
-        name: "Digital Stethoscope",
+        name: "YSTSC-A15 CORPSE STRECHER TROLLEY",
         category: "diagnostic",
-        description: "Professional electronic stethoscope with amplification and noise reduction technology.",
+        description: "a heavy-duty, stainless steel mortuary transport device designed for easy, dignified movement of deceased individuals, featuring a 200-220kg load capacity, height adjustability, lockable casters for mobility, and durable, hygienic construction with options for drainage/sewage containment, making it ideal for funeral homes and morgues",
         inStock: true,
-        image: "images/stethoscope.jpg"
+        image: "images/YSTSC-A15-CORPSE-STRECHER-TROLLEY.png"
     },
     {
         id: 6,
