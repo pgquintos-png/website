@@ -115,45 +115,58 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
 });
 
-// Render products to the grid
+// Group products by category for menu display
+function groupByCategory(products) {
+    const groups = {};
+    products.forEach(product => {
+        const cat = product.category || 'other';
+        if (!groups[cat]) groups[cat] = [];
+        groups[cat].push(product);
+    });
+    const order = ['diagnostic', 'monitoring', 'protective', 'surgical', 'other'];
+    return order.filter(c => groups[c]).map(c => ({ category: c, items: groups[c] }));
+}
+
+// Render products as menu (grouped by category)
 function renderProducts(products) {
     if (products.length === 0) {
         productsGrid.innerHTML = `
-            <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
-                <h3 style="font-size: 24px; color: #6b7280; margin-bottom: 12px;">No products found</h3>
-                <p style="color: #9ca3af;">Try adjusting your search or filter criteria</p>
+            <div class="menu-empty">
+                <h3>No products found</h3>
+                <p>Try adjusting your search or filter criteria</p>
             </div>
         `;
         return;
     }
 
-    productsGrid.innerHTML = products.map(product => `
-        <div class="product-card" data-product-id="${product.id}">
-            <div class="product-image">
-                ${product.image 
-                    ? `<img src="${product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: contain; object-position: center;">` 
-                    : `<svg class="product-icon" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        ${getProductIcon(product.category)}
-                    </svg>`
-                }
-            </div>
-            <div class="product-info">
-                <div class="product-category">${product.category}</div>
-                <h3 class="product-name">${product.name}</h3>
-                ${product.rating && product.reviews ? `
-                <div class="product-rating">
-                    ${generateStars(product.rating)}
-                    <span class="rating-count">(${product.reviews})</span>
+    const grouped = groupByCategory(products);
+    productsGrid.innerHTML = grouped.map(({ category, items }) => `
+        <div class="menu-category-block">
+            <h2 class="menu-category-title">${category}</h2>
+            ${items.map(product => `
+                <div class="menu-item" data-product-id="${product.id}">
+                    <div class="menu-item-image">
+                        ${product.image
+                            ? `<img src="${product.image}" alt="${product.name}">`
+                            : `<svg class="product-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">${getProductIcon(product.category)}</svg>`
+                        }
+                    </div>
+                    <div class="menu-item-body">
+                        <div class="menu-item-name">${product.name}</div>
+                        ${product.rating && product.reviews ? `
+                        <div class="product-rating">
+                            ${generateStars(product.rating)}
+                            <span class="rating-count">(${product.reviews})</span>
+                        </div>
+                        ` : ''}
+                        <p class="menu-item-desc">${product.description}</p>
+                    </div>
+                    <div class="menu-item-action">
+                        ${product.price ? `<span class="menu-item-price">$${product.price.toFixed(2)}</span>` : ''}
+                        <button class="add-to-cart-btn" onclick="addToCart(${product.id})">Add to Cart</button>
+                    </div>
                 </div>
-                ` : ''}
-                <p class="product-description">${product.description}</p>
-                <div class="product-footer">
-                    ${product.price ? `<div class="product-price">$${product.price.toFixed(2)}</div>` : ''}
-                    <button class="add-to-cart-btn" onclick="addToCart(${product.id})">
-                        Add to Cart
-                    </button>
-                </div>
-            </div>
+            `).join('')}
         </div>
     `).join('');
 }
@@ -176,16 +189,16 @@ function generateStars(rating) {
     let starsHTML = '';
     
     for (let i = 0; i < fullStars; i++) {
-        starsHTML += '<span class="star">★</span>';
+        starsHTML += '<span class="star">*</span>';
     }
     
     if (hasHalfStar) {
-        starsHTML += '<span class="star">★</span>';
+        starsHTML += '<span class="star">*</span>';
     }
     
     const emptyStars = 5 - Math.ceil(rating);
     for (let i = 0; i < emptyStars; i++) {
-        starsHTML += '<span class="star" style="color: #d1d5db;">★</span>';
+        starsHTML += '<span class="star star--empty">*</span>';
     }
     
     return starsHTML;
@@ -408,14 +421,65 @@ function removeFromCart(index) {
     showNotification(`${product.name} removed from cart`);
 }
 
-// Checkout function
+// Contact info shown at checkout
+const CONTACT_INFO = {
+    email: 'healthalarm8@yahoo.com',
+    telephone: '044 815 5365 / 044 492 2467',
+    cellphone: '+63 905 660 3813',
+    locations: [
+        'A Mabini Road, Barangay Mojon, Malolos City, Bulacan',
+        'Barangay Pinagbarilan, Baliuag, Bulacan'
+    ]
+};
+
+// Checkout function - show contact info in a box
 function checkout() {
     if (cart.length === 0) {
         showNotification('Your cart is empty');
         return;
     }
-    showNotification('Checkout functionality coming soon!');
-    closeCartModal();
+    showCheckoutContactModal();
+}
+
+// Show modal with contact info box for checkout
+function showCheckoutContactModal() {
+    let modal = document.getElementById('cartModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'cartModal';
+        modal.className = 'cart-modal';
+        document.body.appendChild(modal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeCartModal();
+        });
+    }
+    modal.innerHTML = `
+        <div class="cart-modal-content">
+            <div class="cart-modal-header">
+                <h2>Proceed with your order</h2>
+                <button class="close-btn" onclick="closeCartModal()">x</button>
+            </div>
+            <div class="checkout-message">
+                <p>Contact us with your cart items to complete your order.</p>
+            </div>
+            <div class="contact-info-box">
+                <h3 class="contact-info-box-title">Contact Us</h3>
+                <ul class="contact-info-list">
+                    <li><strong>Email:</strong> ${CONTACT_INFO.email}</li>
+                    <li><strong>Telephone:</strong> ${CONTACT_INFO.telephone}</li>
+                    <li><strong>Cellphone:</strong> ${CONTACT_INFO.cellphone}</li>
+                </ul>
+                <h3 class="contact-info-box-title">Locations</h3>
+                <ul class="contact-info-list">
+                    ${CONTACT_INFO.locations.map(addr => `<li>${addr}</li>`).join('')}
+                </ul>
+            </div>
+            <div class="cart-modal-footer">
+                <button class="btn btn-primary" onclick="closeCartModal()">Close</button>
+            </div>
+        </div>
+    `;
+    modal.style.display = 'flex';
 }
 
 // Add CSS animations for notifications and cart modal
@@ -503,6 +567,57 @@ style.textContent = `
     .close-btn:hover {
         background: #f3f4f6;
         color: #111827;
+    }
+    
+    .checkout-message {
+        padding: 16px 24px;
+        color: #374151;
+    }
+    
+    .checkout-message p {
+        margin: 0;
+        font-size: 16px;
+    }
+    
+    .contact-info-box {
+        margin: 0 24px 24px;
+        padding: 24px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+    }
+    
+    .contact-info-box-title {
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #374151;
+        margin: 0 0 12px 0;
+    }
+    
+    .contact-info-box-title + .contact-info-list {
+        margin-bottom: 20px;
+    }
+    
+    .contact-info-box-title:last-of-type + .contact-info-list {
+        margin-bottom: 0;
+    }
+    
+    .contact-info-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .contact-info-list li {
+        padding: 6px 0;
+        font-size: 15px;
+        color: #1f2937;
+    }
+    
+    .contact-info-box .btn {
+        margin-top: 8px;
     }
     
     .cart-items {
