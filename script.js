@@ -145,7 +145,7 @@ function renderProducts(products) {
             <h2 class="menu-category-title">${category}</h2>
             ${items.map(product => `
                 <div class="menu-item" data-product-id="${product.id}">
-                    <div class="menu-item-image">
+                    <div class="menu-item-image ${product.image ? 'menu-item-image--clickable' : ''}" ${product.image ? `onclick="openImageLightbox(${product.id})"` : ''} role="${product.image ? 'button' : 'presentation'}" tabindex="${product.image ? '0' : '-1'}" ${product.image ? 'onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openImageLightbox(' + product.id + ')}"' : ''}>
                         ${product.image
                             ? `<img src="${product.image}" alt="${product.name}">`
                             : `<svg class="product-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">${getProductIcon(product.category)}</svg>`
@@ -482,6 +482,50 @@ function showCheckoutContactModal() {
     modal.style.display = 'flex';
 }
 
+// Image lightbox - show product image bigger when clicked
+function openImageLightbox(productId) {
+    const product = medicalProducts.find(p => p.id === productId);
+    if (!product || !product.image) return;
+    let overlay = document.getElementById('imageLightbox');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'imageLightbox';
+        overlay.className = 'image-lightbox';
+        overlay.innerHTML = `
+            <div class="image-lightbox-backdrop">
+                <button class="image-lightbox-close" onclick="closeImageLightbox()" aria-label="Close">x</button>
+                <div class="image-lightbox-content">
+                    <img src="" alt="" class="image-lightbox-img">
+                    <p class="image-lightbox-caption"></p>
+                </div>
+            </div>
+        `;
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay || e.target.classList.contains('image-lightbox-backdrop')) closeImageLightbox();
+        });
+        document.body.appendChild(overlay);
+    }
+    function onLightboxKeydown(e) {
+        if (e.key === 'Escape') closeImageLightbox();
+    }
+    document.addEventListener('keydown', onLightboxKeydown);
+    overlay._lightboxKeydown = onLightboxKeydown;
+    overlay.querySelector('.image-lightbox-img').src = product.image;
+    overlay.querySelector('.image-lightbox-img').alt = product.name;
+    overlay.querySelector('.image-lightbox-caption').textContent = product.name;
+    overlay.classList.add('image-lightbox--open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeImageLightbox() {
+    const overlay = document.getElementById('imageLightbox');
+    if (overlay) {
+        overlay.classList.remove('image-lightbox--open');
+        document.body.style.overflow = '';
+        if (overlay._lightboxKeydown) document.removeEventListener('keydown', overlay._lightboxKeydown);
+    }
+}
+
 // Add CSS animations for notifications and cart modal
 const style = document.createElement('style');
 style.textContent = `
@@ -744,6 +788,79 @@ style.textContent = `
     .cart-empty p {
         margin: 0 0 24px 0;
         font-size: 16px;
+    }
+    
+    /* Image lightbox */
+    .image-lightbox {
+        position: fixed;
+        inset: 0;
+        z-index: 10001;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: rgba(0, 0, 0, 0);
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0.2s, opacity 0.2s, background 0.2s;
+    }
+    
+    .image-lightbox--open {
+        visibility: visible;
+        opacity: 1;
+        background: rgba(0, 0, 0, 0.85);
+    }
+    
+    .image-lightbox-backdrop {
+        position: relative;
+        max-width: 90vw;
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .image-lightbox-close {
+        position: absolute;
+        top: -44px;
+        right: 0;
+        background: white;
+        border: none;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        font-size: 24px;
+        line-height: 1;
+        cursor: pointer;
+        color: #374151;
+    }
+    
+    .image-lightbox-close:hover {
+        background: #f3f4f6;
+    }
+    
+    .image-lightbox-content {
+        background: white;
+        border-radius: 8px;
+        padding: 16px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    
+    .image-lightbox-img {
+        max-width: 85vw;
+        max-height: 75vh;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        display: block;
+    }
+    
+    .image-lightbox-caption {
+        margin: 12px 0 0 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #111827;
+        text-align: center;
     }
 `;
 document.head.appendChild(style);
